@@ -21,6 +21,7 @@ const router = createRouter({
         { path: "appointments", name: "appointments", component: () => null },
         { path: "users", name: "users", component: UsersList },
         { path: "users/new", name: "users.new", component: UserNew },
+        { path: "users/:id/edit", name: "users.edit", component: UserNew },
       ],
     },
   ],

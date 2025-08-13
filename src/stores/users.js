@@ -63,6 +63,8 @@ export const useUsersStore = defineStore("users", {
       this.loading = true; this.error = null;
       try {
         const updated = await updateUser(id, payload);
+        console.log(updated);
+        
         const idx = this.items.findIndex(u => String(u.id) === String(id));
         if (idx > -1) this.items[idx] = { ...this.items[idx], ...updated };
         if (this.current?.id === id) this.current = { ...this.current, ...updated };

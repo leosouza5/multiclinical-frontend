@@ -5,7 +5,7 @@
       <button @click="goBack"
         class="size-9 grid place-items-center rounded-lg border border-line hover:bg-gray-50">←</button>
       <div>
-        <h1 class="text-2xl font-bold">Novo Usuário</h1>
+        <h1 class="text-2xl font-bold">{{ isEdit ? "Editar Usuário" : "Novo Usuário" }}</h1>
         <p class="text-md text-gray-500">Registra um novo usuário no sistema</p>
       </div>
     </div>
@@ -21,7 +21,7 @@
 
         <!-- Toggle Ativo -->
         <label class="flex items-center gap-2 text-md select-none">
-          <span class="text-gray-700">Ativo</span>
+          <span class="text-gray-700">{{form.active ? "Ativo" : "Inativo"}}</span>
           <button type="button" @click="form.active = !form.active"
             class="relative inline-flex h-6 w-11 items-center rounded-full transition-colors"
             :class="form.active ? 'bg-brand' : 'bg-gray-300'">
@@ -62,17 +62,17 @@
 
             <!-- Senha -->
             <div>
-              <AppPaswordInput id="password" v-model="form.password" wrapperClass="mt-3" label="Senha"
+              <AppPaswordInput :disabled="isEdit"  id="password" v-model="form.password" wrapperClass="mt-3" label="Senha"
                 autocomplete="new-password" :error="errors.password" />
             </div>
 
             <!-- Confirmar Senha -->
-            <AppPaswordInput id="confirmPassword" v-model="form.passwordConfirm" wrapperClass="mt-3"
+            <AppPaswordInput :disabled="isEdit"  id="confirmPassword" v-model="form.passwordConfirm" wrapperClass="mt-3"
               label="Confirmar Senha" autocomplete="new-password" :error="errors.passwordConfirm" />
           </div>
         </fieldset>
 
-        <!-- Permissões -->
+        <!-- Permissões
         <fieldset>
           <legend class="text-md font-medium text-gray-700">Permissões</legend>
           <div class="grid gap-x-10 gap-y-2 md:grid-cols-3 mt-2 text-md">
@@ -103,13 +103,13 @@
               <input type="checkbox" value="admin" v-model="form.perms" class="size-4"> Administração
             </label>
           </div>
-        </fieldset>
+        </fieldset> -->
 
         <!-- Ações -->
         <div class="flex items-center justify-between mt-2">
           <RouterLink to="/users" class="px-3 py-2 rounded-lg border border-line hover:bg-gray-50">Cancelar</RouterLink>
           <AppButton :loading="loading">
-            Salvar usuário
+            {{ isEdit ? "Salvar alterações" : "Salvar usuário" }}
           </AppButton>
 
         </div>
@@ -119,20 +119,22 @@
 </template>
 
 <script setup>
-import { reactive, ref } from "vue";
-import { useRouter } from "vue-router";
+import { reactive, ref, onMounted, computed } from "vue";
+import { useRouter, useRoute } from "vue-router";
 import AppPaswordInput from "../../components/AppPaswordInput.vue";
 import { useNotify } from "../../stores/notify";
 import { useUsersStore } from "../../stores/users";
-import AppButton from "../../components/AppButton.vue";
 
 const router = useRouter();
+const route = useRoute();
+const notify = useNotify();
+const usersStore = useUsersStore();
+
 const loading = ref(false);
 const errors = reactive({});
-const notify = useNotify();
-const isEdit = ref(false);
 
-const usersStore = useUsersStore();
+const id = route.params.id;
+const isEdit = computed(() => !!id);
 
 const form = reactive({
   name: "",
@@ -141,36 +143,54 @@ const form = reactive({
   password: "",
   passwordConfirm: "",
   active: true,
-  perms: []
+  // perms: [],
 });
 
-function goBack() { router.push("/users"); }
+function goBack(){ router.push("/users"); }
 
 function validate() {
   Object.keys(errors).forEach(k => delete errors[k]);
   if (!form.name) errors.name = "Informe o nome.";
   if (!form.username) errors.username = "Informe o nome de usuário.";
   if (!form.email || !/.+@.+\..+/.test(form.email)) errors.email = "E-mail inválido.";
-  if (!form.password || form.password.length < 6) errors.password = "Mínimo de 6 caracteres.";
-  if (form.password !== form.passwordConfirm) errors.passwordConfirm = "As senhas não coincidem.";
+
+  if (!isEdit.value) {
+    if (!form.password || form.password.length < 6) errors.password = "Mínimo de 6 caracteres.";
+    if (form.password !== form.passwordConfirm) errors.passwordConfirm = "As senhas não coincidem.";
+  } else if (form.password || form.passwordConfirm) {
+    if (form.password.length < 6) errors.password = "Mínimo de 6 caracteres.";
+    if (form.password !== form.passwordConfirm) errors.passwordConfirm = "As senhas não coincidem.";
+  }
   return Object.keys(errors).length === 0;
 }
 
 function payload() {
   const base = {
-    nome_usuario: form.name,
-    login: form.username,
+    login: form.name,
+    nome_usuario: form.username,
     email: form.email,
     ativo: form.active,
-    perms: Array.isArray(form.perms) ? form.perms : [],
+    // perms: Array.isArray(form.perms) ? form.perms : [],
   };
-  if (!isEdit.value) {
-    base.senha = form.password;
-  } else if (form.password) {
-    base.senha = form.password;
-  }
+  if (!isEdit.value) base.senha = form.password;
+  else if (form.password) base.senha = form.password;
   return base;
 }
+
+onMounted(async () => {
+  if (route.params.id) {
+    isEdit.value = true;
+    const user = await usersStore.fetchOne(route.params.id);
+
+    
+    form.name = user.login;
+    form.username = user.nome_usuario;
+    form.email = user.email;
+    form.active = user.ativo;
+    // form.perms = user.permissoes ?? [];
+  }
+});
+
 
 async function onSubmit() {
   if (loading.value) return;
@@ -179,18 +199,18 @@ async function onSubmit() {
   loading.value = true;
   try {
     if (isEdit.value) {
+      console.log(payload());
+      
       await usersStore.update(id, payload());
       notify.success({ title: "Usuário atualizado" });
+      await usersStore.loadAll?.();
     } else {
       await usersStore.create(payload());
       notify.success({ title: "Usuário criado" });
+      await usersStore.loadAll?.();
     }
     router.push("/users");
-  } catch (e) {
-
-  } finally {
-    loading.value = false;
-  }
+  } catch {/* erro no interceptor */}
+  finally { loading.value = false; }
 }
-
 </script>

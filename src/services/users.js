@@ -8,7 +8,7 @@ export async function listUsers(params = {}) {
 }
 
 export async function getUser(id) {
-  const { data } = await http.get(`/users/${id}`);
+  const { data } = await http.get(`/usuarios/${id}`);
   return data;
 }
 
@@ -20,7 +20,9 @@ export async function createUser(payload) {
 }
 
 export async function updateUser(id, payload) {
-  const { data } = await http.put(`/users/${id}`, payload);
+  console.log(payload);
+  
+  const { data } = await http.put(`/usuarios/${id}`, payload);
   return data;
 }
 
