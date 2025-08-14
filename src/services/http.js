@@ -9,12 +9,15 @@ const http = axios.create({
 
 // Anexa Bearer se houver token
 http.interceptors.request.use((config) => {
-  try {
-    const auth = useAuthStore();
-    if (auth?.token) config.headers.Authorization = `Bearer ${auth.token}`;
-  } catch { }
+  const auth = (() => { try { return useAuthStore(); } catch { return null; } })();
+  // Só adiciona Authorization se NÃO tiver vindo um no request
+  if (!config.headers?.Authorization && auth?.token) {
+    config.headers = config.headers || {};
+    config.headers.Authorization = `Bearer ${auth.token}`;
+  }
   return config;
 });
+
 
 // Trata 401 global (opcional)
 http.interceptors.response.use(

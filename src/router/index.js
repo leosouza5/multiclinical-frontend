@@ -7,12 +7,14 @@ const AppLayout = () => import("../layouts/AppLayout.vue");
 const Dashboard = () => import("../pages/Dashboard.vue");
 const UsersList = () => import("../pages/users/UsersList.vue");
 const UserNew = () => import("../pages/users/UserForm.vue");
+const ResetPassword = () => import("../pages/auth/ResetPassword.vue");
 
 const router = createRouter({
   history: createWebHistory(),
   routes: [
     { path: "/login", component: Login, name: "login", meta: { public: true } },
     { path: "/forgot", component: Forgot, name: "forgot", meta: { public: true } },
+    { path: "/reset", name: "reset", component: ResetPassword, meta: { public: true } },
     {
       path: "/",
       component: AppLayout,

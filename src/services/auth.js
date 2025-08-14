@@ -19,3 +19,17 @@ export async function meApi() {
 export async function logoutApi() {
   try { await http.post("/auth/logout"); } catch {}
 }
+
+export async function forgotPasswordRequest({ email }) {
+  const { data } = await http.post("/usuarios/forgot-password", { email });
+  return data;
+}
+
+export async function resetPasswordWithToken({ token, novaSenha }) {
+  const { data } = await http.post("/usuarios/reset-password", {
+    token,
+    novaSenha,
+  });
+  return data;
+}
+
