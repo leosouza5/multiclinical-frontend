@@ -27,6 +27,6 @@ export async function updateProcedure(id, payload) {
 
 // Exclui procedimento
 export async function deleteProcedure(id) {
-  const { data } = await http.delete(`/procedimentos/${id}`);
+  const { data } = await http.patch(`/procedimentos/${id}/inativar`);
   return data;
 }

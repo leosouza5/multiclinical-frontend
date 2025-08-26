@@ -6,6 +6,8 @@ import {
   createTipoAtendimento,
   updateTipoAtendimento,
   deleteTipoAtendimento,
+  ativaTipoAtendimento,
+  inativaTipoAtendimento,
 } from "../services/tiposAtendimento.js";
 
 export const useTiposAtendimentoStore = defineStore("tiposAtendimento", {
@@ -71,6 +73,26 @@ export const useTiposAtendimentoStore = defineStore("tiposAtendimento", {
         this.items = this.items.filter(t => String(t.id) !== String(id));
       } catch (e) {
         this.error = e?.response?.data?.message || e.message || "Erro ao remover tipo de atendimento";
+        throw e;
+      } finally { this.loading = false; }
+    },
+    async desactivate(id) {
+      this.loading = true; this.error = null;
+      try {
+        await inativaTipoAtendimento(id);
+        this.items = this.items.filter(t => String(t.id) !== String(id));
+      } catch (e) {
+        this.error = e?.response?.data?.message || e.message || "Erro ao inativar tipo de atendimento";
+        throw e;
+      } finally { this.loading = false; }
+    },
+    async activate(id) {
+      this.loading = true; this.error = null;
+      try {
+        await ativaTipoAtendimento(id);
+        this.items = this.items.filter(t => String(t.id) !== String(id));
+      } catch (e) {
+        this.error = e?.response?.data?.message || e.message || "Erro ao ativar tipo de atendimento";
         throw e;
       } finally { this.loading = false; }
     },

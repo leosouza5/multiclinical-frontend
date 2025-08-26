@@ -12,14 +12,12 @@
             <div class="flex-1 relative">
                 <input v-model="q" placeholder="Buscar usuários..."
                     class="w-full border border-line rounded-lg px-4 py-2 pl-10" />
-                <span class="absolute left-3 top-1/2 -translate-y-1/2">🔎</span>
+                <span class="absolute left-3 top-1/2 -translate-y-1/2"><Search /></span>
             </div>
-            <!-- <button class="px-3 py-2 border border-line rounded-lg">Filtros</button> -->
         </div>
 
         <div class="bg-white rounded-md shadow-[var(--shadow-card)] min-h-[150px]">
             <template v-if="loading">
-                <!-- Spinner centralizado -->
                 <div class="flex-1 flex items-center justify-center py-10 text-gray-500">
                     <svg class="animate-spin h-6 w-6 text-brand" xmlns="http://www.w3.org/2000/svg" fill="none"
                         viewBox="0 0 24 24">
@@ -118,6 +116,7 @@ import { useRouter } from "vue-router";
 import { useUsersStore } from "../../stores/users";
 import { useNotify } from "../../stores/notify";
 import AppModal from "../../components/AppModal.vue";
+import { Search } from "lucide-vue-next";
 
 const router = useRouter();
 const usersStore = useUsersStore();

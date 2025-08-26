@@ -22,6 +22,6 @@ export async function updateConvenio(id, payload) {
 }
 
 export async function deleteConvenio(id) {
-  const { data } = await http.delete(`/convenios/${id}`);
+  const { data } = await http.patch(`/convenios/${id}/inativar`);
   return data;
 }

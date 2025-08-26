@@ -49,15 +49,15 @@ function goBack() { router.push("/procedures"); }
 onMounted(async () => {
   if (isEdit.value) {
     const data = await store.fetchOne(route.params.id);
-    form.id = data.id;
-    form.nome = data.nome ?? "";
+    form.id = data.id_procedimento;
+    form.nome = data.nome_procedimento ?? "";
   }
 });
 
 async function onSubmit() {
   if (!form.nome.trim()) { alert("Informe o nome do procedimento"); return; }
-  if (isEdit.value) { await store.update(form.id, { nome: form.nome }); }
-  else { await store.create({ nome: form.nome }); }
+  if (isEdit.value) { await store.update(form.id, { nome_procedimento: form.nome }); }
+  else { await store.create({ nome_procedimento: form.nome }); }
   router.push("/procedures");
 }
 </script>

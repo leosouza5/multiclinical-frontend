@@ -23,11 +23,11 @@
           placeholder="Buscar por nome, telefone, responsável…"
           class="w-full border border-line rounded-lg px-4 py-2 pl-11 focus:outline-none focus:ring-2 focus:ring-brand/30"
         />
-        <span class="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500">🔎</span>
+        <span class="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500"><Search /></span>
       </div>
 
       <!-- Status: segmented control (igual Tipos de Atendimento) -->
-      <div class="flex items-center gap-2">
+      <!-- <div class="flex items-center gap-2">
         <span class="text-sm text-gray-500 mr-1">Status:</span>
         <div class="inline-flex rounded-lg border border-line p-0.5 bg-gray-50">
           <button
@@ -52,12 +52,12 @@
             Inativos
           </button>
         </div>
-      </div>
+      </div> -->
     </div>
 
     <!-- Tabela -->
     <div class="bg-white rounded-md shadow-[var(--shadow-card)] border border-line overflow-hidden">
-      <div class="overflow-x-auto">
+      <div class="flex-1 overflow-x-auto overflow-y-auto min-h-[500px]">
         <table class="w-full text-sm">
           <thead class="bg-gray-50 border-b border-line text-gray-600">
             <tr>
@@ -168,9 +168,12 @@ import { ref, computed, onMounted } from "vue";
 import { useRouter } from "vue-router";
 import { useClinicsStore } from "../../stores/clinics";
 import AppModal from "../../components/AppModal.vue";
+import { useNotify } from "../../stores/notify";
+import { Search } from "lucide-vue-next";
 
 const router = useRouter();
 const clinics = useClinicsStore();
+const notify = useNotify();
 
 const loading = ref(false);
 
@@ -267,7 +270,11 @@ function askDelete(c){
 async function confirmDelete(){
   confirmLoading.value = true;
   try{
-    await clinics.remove(confirmId.value);
+    console.log("TO AQ");
+    
+    await clinics.inativar(confirmId.value);
+    notify.success({ title: "Clinica excluida" });
+    console.log("TO 2");
     await reload();
   } finally{
     confirmLoading.value = false;

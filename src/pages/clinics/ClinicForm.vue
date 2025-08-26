@@ -84,12 +84,12 @@
               <p v-if="errors.responsavel_email" class="text-xs text-red-600 mt-1">{{ errors.responsavel_email }}</p>
             </div>
 
-            <!-- Endereço (opcional, não envia para o back) -->
+            <!-- Endereço (opcional, não envia para o back)
             <div class="md:col-span-2">
               <label class="block text-md mb-1">Endereço</label>
               <input v-model.trim="form.endereco" placeholder="Rua, nº, bairro, cidade"
                      class="w-full border border-line rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-brand/30" />
-            </div>
+            </div> -->
           </div>
         </fieldset>
 
@@ -192,7 +192,7 @@ async function loadIfEdit(){
   if(!isEdit.value) return;
   loading.value = true;
   try{
-    const data = await clinics.getById(id);
+    const data = await clinics.fetchOne(id);
     form.nome = data?.nome_clinica ?? data?.nome ?? "";
     form.taxa_repasse = data?.taxa_repasse_clinica ?? data?.taxa_repasse ?? "";
     form.telefone = maskPhone(data?.telefone_clinica ?? data?.telefone ?? "");

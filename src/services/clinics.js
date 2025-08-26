@@ -25,3 +25,13 @@ export async function deleteClinic(id) {
   const { data } = await http.delete(`/clinicas/${id}`);
   return data;
 }
+
+
+export async function ativaClinic(id) {
+  const { data } = await http.patch(`/clinicas/${id}/ativar`);
+  return data;
+}
+export async function inativaClinic(id) {
+  const { data } = await http.patch(`/clinicas/${id}/inativar`);
+  return data;
+}

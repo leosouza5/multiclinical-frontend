@@ -6,6 +6,8 @@ import {
   createClinic,
   updateClinic,
   deleteClinic,
+  ativaClinic,
+  inativaClinic,
 } from "../services/clinics.js";
 
 export const useClinicsStore = defineStore("clinics", {
@@ -80,9 +82,28 @@ export const useClinicsStore = defineStore("clinics", {
         throw e;
       } finally { this.loading = false; }
     },
-    // stores/clinics.ts (trecho)
-    async inativar(id) { const r = await fetch(`${BASE}/${id}/inativar`, { method: 'PATCH' }); if (!r.ok) throw new Error(); return r.json(); },
-    async ativar(id) { const r = await fetch(`${BASE}/${id}/ativar`, { method: 'PATCH' }); if (!r.ok) throw new Error(); return r.json(); },
+    async inativar(id) {
+      console.log("TESTE TOTAL");
+      this.loading = true; this.error = null;
+      try {
+        
+        await inativaClinic(id);
+        this.items = this.items.filter(c => String(c.id) !== String(id));
+      } catch (e) {
+        this.error = e?.response?.data?.message || e.message || "Erro ao remover clínica";
+        throw e;
+      } finally { this.loading = false; }
+    },
+    async ativar(id) {
+      this.loading = true; this.error = null;
+      try {
+        await this.ativar(id);
+        this.items = this.items.filter(c => String(c.id) !== String(id));
+      } catch (e) {
+        this.error = e?.response?.data?.message || e.message || "Erro ao Ativar clínica";
+        throw e;
+      } finally { this.loading = false; }
+    },
 
   },
 });

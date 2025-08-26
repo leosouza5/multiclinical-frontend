@@ -25,3 +25,11 @@ export async function deleteTipoAtendimento(id) {
   const { data } = await http.delete(`/tipos-atendimento/${id}`);
   return data;
 }
+export async function ativaTipoAtendimento(id) {
+  const { data } = await http.patch(`/tipos-atendimento/${id}/ativar`);
+  return data;
+}
+export async function inativaTipoAtendimento(id) {
+  const { data } = await http.patch(`/tipos-atendimento/${id}/inativar`);
+  return data;
+}

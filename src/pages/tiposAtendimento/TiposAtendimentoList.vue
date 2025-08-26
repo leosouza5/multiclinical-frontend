@@ -3,10 +3,7 @@
     <!-- Header -->
     <div class="flex items-center justify-between mb-3">
       <h1 class="text-2xl font-bold">Tipos de Atendimento</h1>
-      <RouterLink
-        to="/tipos-atendimento/new"
-        class="px-3 py-2 rounded-lg bg-brand text-white hover:bg-brand-600"
-      >
+      <RouterLink to="/tipos-atendimento/new" class="px-3 py-2 rounded-lg bg-brand text-white hover:bg-brand-600">
         + Novo Tipo de Atendimento
       </RouterLink>
     </div>
@@ -18,50 +15,20 @@
     <div class="bg-white border border-line rounded-xl p-3 md:p-4 mb-4 shadow-[var(--shadow-card)]">
       <!-- Busca: largura total -->
       <div class="relative mb-3">
-        <input
-          v-model="q"
-          placeholder="Buscar por nome…"
-          class="w-full border border-line rounded-lg px-4 py-2 pl-11 focus:outline-none focus:ring-2 focus:ring-brand/30"
-        />
-        <span class="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500">🔎</span>
+        <input v-model="q" placeholder="Buscar por nome…"
+          class="w-full border border-line rounded-lg px-4 py-2 pl-11 focus:outline-none focus:ring-2 focus:ring-brand/30" />
+        <span class="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500"><Search /></span>
       </div>
 
-      <!-- Status: segmented control -->
-      <div class="flex items-center gap-2">
-        <span class="text-sm text-gray-500 mr-1">Status:</span>
-        <div class="inline-flex rounded-lg border border-line p-0.5 bg-gray-50">
-          <button
-            class="px-3 py-1.5 rounded-md text-sm transition"
-            :class="status === '' ? 'bg-white shadow border border-line' : 'text-gray-600 hover:bg-white'"
-            @click="setStatus('')"
-          >
-            Todos
-          </button>
-          <button
-            class="px-3 py-1.5 rounded-md text-sm transition"
-            :class="status === 'ATIVO' ? 'bg-white shadow border border-line' : 'text-gray-600 hover:bg-white'"
-            @click="setStatus('ATIVO')"
-          >
-            Ativos
-          </button>
-          <button
-            class="px-3 py-1.5 rounded-md text-sm transition"
-            :class="status === 'INATIVO' ? 'bg-white shadow border border-line' : 'text-gray-600 hover:bg-white'"
-            @click="setStatus('INATIVO')"
-          >
-            Inativos
-          </button>
-        </div>
-
-        
-      </div>
+  
     </div>
 
     <!-- Tabela -->
     <div class="bg-white rounded-xl shadow-[var(--shadow-card)] border border-line">
       <template v-if="loading">
         <div class="flex items-center justify-center py-10 text-gray-500">
-          <svg class="animate-spin h-6 w-6 text-brand" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+          <svg class="animate-spin h-6 w-6 text-brand" xmlns="http://www.w3.org/2000/svg" fill="none"
+            viewBox="0 0 24 24">
             <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4" />
             <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z" />
           </svg>
@@ -69,7 +36,7 @@
       </template>
 
       <template v-else>
-        <div class="overflow-x-auto">
+        <div class="flex-1 overflow-x-auto overflow-y-auto min-h-[500px]">
           <table class="min-w-full text-md">
             <thead class="bg-gray-50 text-gray-600">
               <tr>
@@ -79,19 +46,13 @@
               </tr>
             </thead>
             <tbody>
-              <tr
-                v-for="t in filtered"
-                :key="getId(t)"
-                class="border-t border-line hover:bg-gray-50/60"
-              >
+              <tr v-for="t in filtered" :key="getId(t)" class="border-t border-line hover:bg-gray-50/60">
                 <td class="px-4 py-3">
                   <div class="font-medium text-gray-900">{{ getName(t) }}</div>
                 </td>
                 <td class="px-4 py-3">
-                  <span
-                    class="inline-flex items-center px-2 py-0.5 rounded-full text-xs border"
-                    :class="isAtivo(t) ? 'text-green-700 border-green-300 bg-green-50' : 'text-gray-600 border-gray-300 bg-gray-50'"
-                  >
+                  <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs border"
+                    :class="isAtivo(t) ? 'text-green-700 border-green-300 bg-green-50' : 'text-gray-600 border-gray-300 bg-gray-50'">
                     {{ isAtivo(t) ? 'ATIVO' : 'INATIVO' }}
                   </span>
                 </td>
@@ -99,8 +60,7 @@
                   <Menu as="div" class="relative inline-block text-left">
                     <MenuButton
                       class="inline-flex items-center justify-center size-8 rounded-md border border-line hover:bg-gray-100 focus:outline-none"
-                      aria-label="Ações"
-                    >
+                      aria-label="Ações">
                       <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 24 24" fill="currentColor">
                         <circle cx="5" cy="12" r="2"></circle>
                         <circle cx="12" cy="12" r="2"></circle>
@@ -109,30 +69,22 @@
                     </MenuButton>
 
                     <MenuItems
-                      class="absolute right-0 mt-2 w-44 origin-top-right rounded-md border border-line bg-white shadow-[var(--shadow-card)] focus:outline-none z-50"
-                    >
+                      class="absolute right-0 mt-2 w-44 origin-top-right rounded-md border border-line bg-white shadow-[var(--shadow-card)] focus:outline-none z-50">
                       <div class="p-1">
                         <MenuItem v-slot="{ active }">
-                          <button
-                            @click="onEdit(t)"
-                            class="w-full text-left px-3 py-2 text-sm rounded-md"
-                            :class="active ? 'bg-gray-50' : ''"
-                          >
-                            Editar
-                          </button>
+                        <button @click="onEdit(t)" class="w-full text-left px-3 py-2 text-sm rounded-md"
+                          :class="active ? 'bg-gray-50' : ''">
+                          Editar
+                        </button>
                         </MenuItem>
 
                         <MenuItem v-slot="{ active }">
-                          <button
-                            @click="askToggle(t)"
-                            class="w-full text-left px-3 py-2 text-sm rounded-md"
-                            :class="[
-                              active ? 'bg-gray-50' : '',
-                              isAtivo(t) ? 'text-red-700' : 'text-green-700'
-                            ]"
-                          >
-                            {{ isAtivo(t) ? 'Inativar' : 'Ativar' }}
-                          </button>
+                        <button @click="askToggle(t)" class="w-full text-left px-3 py-2 text-sm rounded-md" :class="[
+                          active ? 'bg-gray-50' : '',
+                          isAtivo(t) ? 'text-red-700' : 'text-green-700'
+                        ]">
+                          {{ "Excluir" }}
+                        </button>
                         </MenuItem>
                       </div>
                     </MenuItems>
@@ -152,18 +104,13 @@
     </div>
 
     <!-- Modal -->
-    <AppModal
-      :open="confirmOpen"
-      :title="confirmAction === 'inativar' ? 'Inativar tipo de atendimento' : 'Ativar tipo de atendimento'"
-      :description="confirmAction === 'inativar'
-        ? `Tem certeza que deseja inativar ${confirmName}? Você poderá reativar quando quiser.`
-        : `Deseja ativar ${confirmName}?`"
-      cancelText="Cancelar"
-      :confirmText="confirmAction === 'inativar' ? 'Inativar' : 'Ativar'"
-      :confirmLoading="confirmLoading"
-      @close="confirmOpen = false"
-      @confirm="confirmToggle"
-    />
+    <AppModal :open="confirmOpen"
+      :title="confirmAction === 'Excluir' ? 'Excluir tipo de atendimento' : 'Ativar tipo de atendimento'"
+      :description="confirmAction === 'Excluir'
+        ? `Tem certeza que deseja Excluir ${confirmName}? Você poderá reativar quando quiser.`
+        : `Deseja ativar ${confirmName}?`" cancelText="Cancelar"
+      :confirmText="confirmAction === 'Excluir' ? 'Excluir' : 'Ativar'" :confirmLoading="confirmLoading"
+      @close="confirmOpen = false" @confirm="confirmToggle" />
   </div>
 </template>
 
@@ -174,6 +121,7 @@ import { useRouter } from "vue-router";
 import { useTiposAtendimentoStore } from "@/stores/tiposAtendimento.js";
 import { useNotify } from "@/stores/notify";
 import AppModal from "@/components/AppModal.vue";
+import { Search } from "lucide-vue-next";
 
 const router = useRouter();
 const store = useTiposAtendimentoStore();
@@ -233,25 +181,21 @@ const confirmAction = ref("inativar"); // 'inativar' | 'ativar'
 function askToggle(t) {
   confirmId.value = getId(t);
   confirmName.value = getName(t);
-  confirmAction.value = isAtivo(t) ? "inativar" : "ativar";
+  confirmAction.value = "Excluir";
   confirmOpen.value = true;
 }
 
 async function confirmToggle() {
+
+
   if (!confirmId.value) return;
   confirmLoading.value = true;
   try {
-    if (confirmAction.value === "inativar") {
-      await store.inativar(confirmId.value);
-      notify.success({ title: "Tipo de atendimento inativado" });
-    } else {
-      await store.ativar(confirmId.value);
-      notify.success({ title: "Tipo de atendimento ativado" });
-    }
+    await store.desactivate(confirmId.value);
+    notify.success({ title: "Tipo de atendimento excluido" });
     confirmOpen.value = false;
-    await store.loadAll(); // recarrega a lista uma única vez
+    await store.loadAll();
   } catch (e) {
-    /* erros tratados globalmente */
   } finally {
     confirmLoading.value = false;
   }
