@@ -46,7 +46,7 @@
 
           <div class="mt-4 px-3 text-xs uppercase text-gray-500">Clínicas</div>
 
-          <RouterLink :to="{ name: '' }"
+          <RouterLink :to="{ name: 'clinics' }"
             class="mt-1 flex items-center gap-2 px-3 py-2 rounded-md border border-transparent" :class="linkClass('')">
             <Building2 class="text-brand" />
             <span>Clínicas</span>
@@ -55,7 +55,7 @@
 
           <div class="mt-4 px-3 text-xs uppercase text-gray-500">Procedimentos</div>
 
-          <RouterLink :to="{ name: '' }"
+          <RouterLink :to="{ name: 'procedures' }"
             class="mt-1 flex items-center gap-2 px-3 py-2 rounded-md border border-transparent" :class="linkClass('')">
             <NotepadText class="text-brand" />
             <span>Procedimentos</span>
@@ -64,7 +64,7 @@
 
           <div class="mt-4 px-3 text-xs uppercase text-gray-500">Convênios</div>
 
-          <RouterLink :to="{ name: '' }"
+          <RouterLink :to="{ name: 'convenios' }"
             class="mt-1 flex items-center gap-2 px-3 py-2 rounded-md border border-transparent" :class="linkClass('')">
 
             <FileText class="text-brand" />
@@ -74,7 +74,7 @@
 
           <div class="mt-4 px-3 text-xs uppercase text-gray-500">Tipos de Atendimentos</div>
 
-          <RouterLink :to="{ name: '' }"
+          <RouterLink :to="{ name: 'tiposAtendimento' }"
             class="mt-1 flex items-center gap-2 px-3 py-2 rounded-md border border-transparent" :class="linkClass('')">
             <List class="text-brand" />
             <span>Tipos de Atendimentos</span>
