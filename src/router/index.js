@@ -42,7 +42,8 @@ const router = createRouter({
         { path: "tipos-atendimento", name: "tiposAtendimento", component: () => import("../pages/tiposAtendimento/TiposAtendimentoList.vue") },
         { path: "tipos-atendimento/new", name: "tiposAtendimento.new", component: () => import("../pages/tiposAtendimento/TipoAtendimentoForm.vue") },
         { path: "tipos-atendimento/:id/edit", name: "tiposAtendimento.edit", component: () => import("../pages/tiposAtendimento/TipoAtendimentoForm.vue") },
-
+        {path: "atendimentos", name: "atendimentos", component: () => import("../pages/atendimentos/AtendimentosList.vue")},
+        {path: "atendimentos/new", name: "atendimentos.new", component: () => import("../pages/atendimentos/AtendimentosNew.vue")},
       ],
     },
   ],

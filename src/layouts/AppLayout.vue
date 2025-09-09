@@ -27,9 +27,9 @@
 
           <div class="mt-4 px-3 text-xs uppercase text-gray-500">Atendimentos</div>
 
-          <RouterLink :to="{ name: 'appointments' }"
+          <RouterLink :to="{ name: 'atendimentos' }"
             class="mt-1 flex items-center gap-2 px-3 py-2 rounded-md border border-transparent"
-            :class="linkClass('appointments')">
+            :class="linkClass('atendimentos')">
             <CalendarClock class="text-brand" />
             <span>Atendimentos</span>
           </RouterLink>

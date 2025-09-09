@@ -4,6 +4,8 @@ import http from "../services/http.js";
 // Lista todos os procedimentos
 export async function listProcedures(params = {}) {
   const { data } = await http.get("/procedimentos", { params });
+  console.log(data);
+  
   return data;
 }
 
