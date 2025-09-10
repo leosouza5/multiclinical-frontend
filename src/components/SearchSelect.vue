@@ -28,7 +28,7 @@
       role="listbox"
     >
       <!-- Caixa de busca dedicada (opcional; mantém mesma consulta do input principal) -->
-      <div class="p-2 border-b border-line">
+      <div class="p-2 border-b border-line hidden">
         <input
           v-model="query"
           class="w-full border border-line rounded-md px-2 py-1 text-sm"
@@ -43,7 +43,7 @@
         <li v-else-if="!items.length" class="px-3 py-2 text-sm text-gray-500">Nenhum resultado</li>
 
         <li
-          v-for="(opt, i) in items"
+          v-for="(opt, i) in shownItems"
           :key="getVal(opt) ?? i"
           class="px-3 py-2 text-sm cursor-pointer flex items-center justify-between"
           :class="i === activeIndex ? 'bg-gray-50' : 'hover:bg-gray-50'"
@@ -57,13 +57,7 @@
         </li>
       </ul>
 
-      <div class="border-t px-2 py-1 text-right">
-        <button
-          type="button"
-          class="text-sm text-gray-600 px-2 py-1 rounded hover:bg-gray-50"
-          @click="closeDropdown"
-        >Fechar</button>
-      </div>
+     
     </div>
   </div>
 </template>
@@ -111,6 +105,14 @@ function onType(val){
   if (!open.value) openDropdown();
   triggerSearch(val);
 }
+
+// depois de displayLabel:
+const shownItems = computed(() => {
+  const q = (query.value || "").trim().toLowerCase();
+  if (!q) return props.items;
+  return props.items.filter(o => (getText(o) || "").toLowerCase().includes(q));
+});
+
 
 function select(opt){
   emit("update:modelValue", getVal(opt));

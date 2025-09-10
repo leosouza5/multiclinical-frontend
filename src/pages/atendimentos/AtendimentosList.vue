@@ -108,9 +108,9 @@
                     class="absolute right-0 mt-2 w-44 origin-top-right rounded-md border border-line bg-white shadow-[var(--shadow-card)] focus:outline-none z-50">
                     <div class="p-1">
                       <MenuItem v-slot="{ active }">
-                      <button @click="onDetails(a)" class="w-full text-left px-3 py-2 text-sm rounded-md"
+                      <button @click="router.push(`/atendimentos/${getId(a)}/edit`)" class="w-full text-left px-3 py-2 text-sm rounded-md"
                         :class="active ? 'bg-gray-50' : ''">
-                        Detalhes
+                        Editar
                       </button>
                       </MenuItem>
                       <MenuItem v-slot="{ active }">

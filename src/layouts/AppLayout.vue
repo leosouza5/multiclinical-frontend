@@ -37,8 +37,8 @@
 
           <div class="mt-4 px-3 text-xs uppercase text-gray-500">Pacientes</div>
 
-          <RouterLink :to="{ name: '' }"
-            class="mt-1 flex items-center gap-2 px-3 py-2 rounded-md border border-transparent" :class="linkClass('')">
+          <RouterLink :to="{ name: 'pacientes' }"
+            class="mt-1 flex items-center gap-2 px-3 py-2 rounded-md border border-transparent" :class="linkClass('pacientes')">
             <Users class="text-brand" />
             <span>Pacientes</span>
           </RouterLink>

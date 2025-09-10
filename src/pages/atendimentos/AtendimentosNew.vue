@@ -4,7 +4,7 @@
     <div class="flex items-center gap-3 mb-3">
       <RouterLink to="/atendimentos" class="rounded-lg border border-line px-3 py-2 hover:bg-gray-50">←</RouterLink>
       <div>
-        <h1 class="text-2xl font-bold">Novo Atendimento</h1>
+        <h1 class="text-2xl font-bold">{{ pageTitle }}</h1>
         <p class="text-gray-500">Registre os detalhes do atendimento realizado</p>
       </div>
     </div>
@@ -43,7 +43,7 @@
             </div>
             <div>
               <label class="text-sm text-gray-600">CPF</label>
-              <input vCpf v-model="novoPaciente.cpf" :class="inputCls('cpf')" placeholder="000.000.000-00"
+              <input v-cpf  v-model="novoPaciente.cpf" :class="inputCls('cpf')" placeholder="000.000.000-00"
                 data-error="cpf" />
               <p v-if="erros.cpf" class="text-red-600 text-sm mt-1">{{ erros.cpf }}</p>
             </div>
@@ -102,7 +102,7 @@
             <RouterLink to="/atendimentos" class="px-3 py-2 rounded-lg border border-line">Cancelar</RouterLink>
             <button type="submit" class="px-3 py-2 rounded-lg bg-brand text-white hover:bg-brand-600"
               :disabled="store.loading">
-              <span v-if="!store.loading">Salvar Atendimento</span>
+              <span v-if="!store.loading">{{ submitLabel }}</span>
               <span v-else>Salvando...</span>
             </button>
           </div>
@@ -169,11 +169,18 @@ import { listClinics } from "@/services/clinics.js";
 import { listConvenios } from "@/services/convenios.js";
 import { listProcedures } from "@/services/procedures.js";
 import { listTiposAtendimento } from "@/services/tiposAtendimento.js";
+import { useRoute } from "vue-router";
+
+const route = useRoute();
+const editId = computed(() => route.params.id ?? null);
+const isEdit = computed(() => !!editId.value);
 
 const router = useRouter();
 const store = useAtendimentosStore();
 const notify = useNotify();
 
+const pageTitle = computed(() => isEdit.value ? "Editar Atendimento" : "Novo Atendimento");
+const submitLabel = computed(() => isEdit.value ? "Salvar Alterações" : "Salvar Atendimento");
 const OPTION_NOVO = "__novo_cliente__";
 
 const form = ref({
@@ -231,7 +238,7 @@ function currency(v) { return Number(v || 0).toLocaleString("pt-BR", { style: "c
 async function buscarPacientes(q = "") {
   try {
     const res = await listPacientes({ q, limit: 20, somente_ativos: true });
-    const base = normalizeItems(res, { idKey: "id_paciente", nameKey: "nome_paciente" });
+    const base = normalizeItems(res, { idKey: "id_cliente", nameKey: "nome_cliente" });
     pacientes.value = [{ id: OPTION_NOVO, nome: "Cliente sem cadastro (cadastrar agora)" }, ...base];
   } catch (e) {
     notify.error({ title: "Erro ao listar pacientes", message: e.message });
@@ -322,16 +329,23 @@ async function salvar() {
   if (!validar()) return;
   try {
     const payload = montarPayload();
-    console.log("PAYLOAD : ", payload);
 
-    await store.create(payload);
+    if (isEdit.value) {
+      // UPDATE — troque 'update' pelo método do seu store
+      await (store.update?.(editId.value, payload));
+      notify.success({ title: "Sucesso", message: "Atendimento atualizado." });
+    } else {
+      // CREATE
+      await store.create(payload);
+      notify.success({ title: "Sucesso", message: "Atendimento salvo com sucesso." });
+    }
 
-    notify.success({ title: "Sucesso", message: "Atendimento salvo com sucesso." });
     router.push("/atendimentos");
   } catch (e) {
-    // notify.error({ title: "Erro ao salvar", message: e?.response?.data?.message || e.message || "Falha ao salvar atendimento" });
+    // notify.error({ title: "Erro", message: e?.response?.data?.message || e.message || "Falha ao salvar atendimento" });
   }
 }
+
 
 
 watch(() => form.value.pacienteId, (novo) => {
@@ -360,6 +374,65 @@ function firstErrorKey() {
   return keys.length ? keys[0] : null
 }
 
+function toLocalInputValue(isoZ) {
+  if (!isoZ) return null;
+  const d = new Date(isoZ);
+  const pad = (n) => String(n).padStart(2, "0");
+  return `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}T${pad(d.getHours())}:${pad(d.getMinutes())}`;
+}
+
+function ensureItem(listRef, id, nome) {
+  if (!id) return;
+  const exists = listRef.value.some(i => i.id === id);
+  if (!exists) listRef.value.unshift({ id, nome });
+}
+
+async function carregarAtendimento() {
+  if (!isEdit.value) return;
+
+  const a = await (store.fetchOne?.(editId.value));
+  console.log(a);
+  
+  if (!a) throw new Error("Atendimento não encontrado");
+
+  const idCliente = a.cliente?.id_cliente ?? null;
+  const nomeCliente = a.cliente?.nome_cliente ?? "";
+  const cpfCliente = a.cliente?.cpf ?? "";
+
+  const idClinica = a.clinica?.id_clinica ?? null;
+  const nomeClinica = a.clinica?.nome_clinica ?? "";
+
+  const idConvenio = a.convenio?.id_convenio ?? null;
+  const nomeConvenio = a.convenio?.nome_convenio ?? "";
+
+  const idProced = a.procedimento?.id_procedimento ?? null;
+  const nomeProced = a.procedimento?.nome_procedimento ?? "";
+
+  const idTipo = a.tipoAtendimento?.id_tipo_atendimento ?? null;
+  const nomeTipo = a.tipoAtendimento?.nome_tipo_atendimento ?? "";
+
+  ensureItem(pacientes, idCliente, nomeCliente);
+  ensureItem(clinicas, idClinica, nomeClinica);
+  ensureItem(convenios, idConvenio, nomeConvenio);
+  ensureItem(procedimentos, idProced, nomeProced);
+  ensureItem(tipos, idTipo, nomeTipo);
+
+  form.value = {
+    pacienteId: idCliente ?? null,
+    clinicaId: idClinica ?? null,
+    convenioId: idConvenio ?? null,
+    procedimentoId: idProced ?? null,
+    tipoAtendimentoId: idTipo ?? null,
+    valorBruto: Number(a.valor_bruto ?? 0),
+    observacao: a.observacao ?? "",
+    dataHora: toLocalInputValue(a.data_atendimento), // datetime-local
+  };
+
+  descontoTotal.value = Number(a.desconto ?? 0);
+  novoPaciente.value = { nomeCompleto: nomeCliente, cpf: cpfCliente };
+}
+
+
 async function focusFirstError() {
   const key = firstErrorKey()
   if (!key) return
@@ -367,6 +440,7 @@ async function focusFirstError() {
   const el = document.querySelector(`[data-error="${key}"]`)
   el?.focus?.()
 }
+
 
 function validar() {
   erros.value = {}
@@ -429,5 +503,7 @@ onMounted(async () => {
     buscarProcedimentos(""),
     buscarTipos(""),
   ]);
+  await carregarAtendimento();
 });
+
 </script>
