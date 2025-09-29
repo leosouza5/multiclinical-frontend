@@ -1,7 +1,7 @@
 <template>
   <div class="min-h-screen bg-white">
     <!-- Header (padrão do dashboard) -->
-    <div class="border-b border-gray-200 bg-white">
+    <div class="border-b border-gray-200 border-gray-200 bg-white">
       <div class="flex h-16 items-center px-6">
         <div class="ml-auto flex items-center gap-4">
           <DateRangePicker :dateRange="dateRange" @update:dateRange="val => Object.assign(dateRange, val)" />
@@ -23,20 +23,20 @@
       </div>
 
       <!-- Tabela principal (compacta, sem paginação local) -->
-      <div class="bg-white rounded-md shadow-[var(--shadow-card)] border border-line">
-        <div class="flex items-center justify-between px-4 py-3 border-b border-line/60">
+      <div class="bg-white rounded-md shadow-[var(--shadow-card)] border border-gray-200">
+        <div class="flex items-center justify-between px-4 py-3 border-b border-gray-200 border-line/60">
           <div>
             <h2 class="font-semibold">Atendimentos do Período</h2>
             <p class="text-sm text-gray-500">Filtro: {{ dateRange.from }} a {{ dateRange.to }} · Registros: {{ rows.length }}</p>
           </div>
           <div class="flex items-center gap-2">
-            <button class="px-3 py-2 rounded-lg border border-line hover:bg-gray-50" @click="exportCSV">Exportar CSV</button>
+            <button class="px-3 py-2 rounded-lg border border-gray-200 hover:bg-gray-50" @click="exportCSV">Exportar CSV</button>
           </div>
         </div>
         <div class="overflow-x-auto">
           <table class="min-w-full text-sm">
-            <thead class="bg-gray-50 border-b border-line text-gray-600">
-              <tr class="text-left text-gray-600 border-b bg-gray-50">
+            <thead class="bg-gray-50 border-b border-gray-200 border-line text-gray-600">
+              <tr class="text-left text-gray-600 border-b border-gray-200 bg-gray-50">
                 <th class="px-3 py-2">Data</th>
                 <th class="px-3 py-2">Cliente</th>
                 <th class="px-3 py-2">Convênio</th>
@@ -49,7 +49,7 @@
               </tr>
             </thead>
             <tbody>
-              <tr v-for="row in rows" :key="row.id_atendimento" class="border-b last:border-0 hover:bg-gray-50">
+              <tr v-for="row in rows" :key="row.id_atendimento" class="border-b border-gray-200 last:border-0 hover:bg-gray-50">
                 <td class="px-3 py-2 whitespace-nowrap">{{ formatDate(row.data_atendimento) }}</td>
                 <td class="px-3 py-2">{{ row.cliente && row.cliente.nome_cliente }}</td>
                 <td class="px-3 py-2">{{ row.convenio && row.convenio.nome_convenio }}</td>
@@ -81,14 +81,14 @@
 
       <!-- Quebras gerenciais (cards padrão) -->
       <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
-        <div class="bg-white rounded-md shadow-[var(--shadow-card)] border border-line overflow-hidden">
-          <div class="flex items-center justify-between px-4 py-3 border-b border-line/60">
+        <div class="bg-white rounded-md shadow-[var(--shadow-card)] border border-gray-200 overflow-hidden">
+          <div class="flex items-center justify-between px-4 py-3 border-b border-gray-200 border-line/60">
             <h3 class="font-semibold">Por Convênio</h3>
           </div>
           <div class="overflow-x-auto">
             <table class="min-w-full text-sm">
-              <thead class="bg-gray-50 border-b border-line text-gray-600">
-                <tr class="text-left text-gray-600 border-b bg-gray-50">
+              <thead class="bg-gray-50 border-b border-gray-200 border-line text-gray-600">
+                <tr class="text-left text-gray-600 border-b border-gray-200 bg-gray-50">
                   <th class="px-3 py-2">Descrição</th>
                   <th class="px-3 py-2 text-right">Qtde</th>
                   <th class="px-3 py-2 text-right">Bruto</th>
@@ -97,7 +97,7 @@
                 </tr>
               </thead>
               <tbody>
-                <tr v-for="r in groupedConvenio" :key="r.label" class="border-b last:border-0 hover:bg-gray-50">
+                <tr v-for="r in groupedConvenio" :key="r.label" class="border-b border-gray-200 last:border-0 hover:bg-gray-50">
                   <td class="px-3 py-2">{{ r.label }}</td>
                   <td class="px-3 py-2 text-right">{{ r.count }}</td>
                   <td class="px-3 py-2 text-right">{{ formatCurrency(r.bruto) }}</td>
@@ -112,14 +112,14 @@
           </div>
         </div>
 
-        <div class="bg-white rounded-md shadow-[var(--shadow-card)] border border-line overflow-hidden">
-          <div class="flex items-center justify-between px-4 py-3 border-b border-line/60">
+        <div class="bg-white rounded-md shadow-[var(--shadow-card)] border border-gray-200 overflow-hidden">
+          <div class="flex items-center justify-between px-4 py-3 border-b border-gray-200 border-line/60">
             <h3 class="font-semibold">Por Clínica</h3>
           </div>
           <div class="overflow-x-auto">
             <table class="min-w-full text-sm">
-              <thead class="bg-gray-50 border-b border-line text-gray-600">
-                <tr class="text-left text-gray-600 border-b bg-gray-50">
+              <thead class="bg-gray-50 border-b border-gray-200 border-line text-gray-600">
+                <tr class="text-left text-gray-600 border-b border-gray-200 bg-gray-50">
                   <th class="px-3 py-2">Descrição</th>
                   <th class="px-3 py-2 text-right">Qtde</th>
                   <th class="px-3 py-2 text-right">Bruto</th>
@@ -128,7 +128,7 @@
                 </tr>
               </thead>
               <tbody>
-                <tr v-for="r in groupedClinica" :key="r.label" class="border-b last:border-0 hover:bg-gray-50">
+                <tr v-for="r in groupedClinica" :key="r.label" class="border-b border-gray-200 last:border-0 hover:bg-gray-50">
                   <td class="px-3 py-2">{{ r.label }}</td>
                   <td class="px-3 py-2 text-right">{{ r.count }}</td>
                   <td class="px-3 py-2 text-right">{{ formatCurrency(r.bruto) }}</td>
@@ -143,14 +143,14 @@
           </div>
         </div>
 
-        <div class="bg-white rounded-md shadow-[var(--shadow-card)] border border-line overflow-hidden">
-          <div class="flex items-center justify-between px-4 py-3 border-b border-line/60">
+        <div class="bg-white rounded-md shadow-[var(--shadow-card)] border border-gray-200 overflow-hidden">
+          <div class="flex items-center justify-between px-4 py-3 border-b border-gray-200 border-line/60">
             <h3 class="font-semibold">Por Tipo de Atendimento</h3>
           </div>
           <div class="overflow-x-auto">
             <table class="min-w-full text-sm">
-              <thead class="bg-gray-50 border-b border-line text-gray-600">
-                <tr class="text-left text-gray-600 border-b bg-gray-50">
+              <thead class="bg-gray-50 border-b border-gray-200 border-line text-gray-600">
+                <tr class="text-left text-gray-600 border-b border-gray-200 bg-gray-50">
                   <th class="px-3 py-2">Descrição</th>
                   <th class="px-3 py-2 text-right">Qtde</th>
                   <th class="px-3 py-2 text-right">Bruto</th>
@@ -159,7 +159,7 @@
                 </tr>
               </thead>
               <tbody>
-                <tr v-for="r in groupedTipo" :key="r.label" class="border-b last:border-0 hover:bg-gray-50">
+                <tr v-for="r in groupedTipo" :key="r.label" class="border-b border-gray-200 last:border-0 hover:bg-gray-50">
                   <td class="px-3 py-2">{{ r.label }}</td>
                   <td class="px-3 py-2 text-right">{{ r.count }}</td>
                   <td class="px-3 py-2 text-right">{{ formatCurrency(r.bruto) }}</td>
@@ -174,14 +174,14 @@
           </div>
         </div>
 
-        <div class="bg-white rounded-md shadow-[var(--shadow-card)] border border-line overflow-hidden">
-          <div class="flex items-center justify-between px-4 py-3 border-b border-line/60">
+        <div class="bg-white rounded-md shadow-[var(--shadow-card)] border border-gray-200 overflow-hidden">
+          <div class="flex items-center justify-between px-4 py-3 border-b border-gray-200 border-line/60">
             <h3 class="font-semibold">Por Procedimento</h3>
           </div>
           <div class="overflow-x-auto">
             <table class="min-w-full text-sm">
-              <thead class="bg-gray-50 border-b border-line text-gray-600">
-                <tr class="text-left text-gray-600 border-b bg-gray-50">
+              <thead class="bg-gray-50 border-b border-gray-200 border-line text-gray-600">
+                <tr class="text-left text-gray-600 border-b border-gray-200 bg-gray-50">
                   <th class="px-3 py-2">Descrição</th>
                   <th class="px-3 py-2 text-right">Qtde</th>
                   <th class="px-3 py-2 text-right">Bruto</th>
@@ -190,7 +190,7 @@
                 </tr>
               </thead>
               <tbody>
-                <tr v-for="r in groupedProcedimento" :key="r.label" class="border-b last:border-0 hover:bg-gray-50">
+                <tr v-for="r in groupedProcedimento" :key="r.label" class="border-b border-gray-200 last:border-0 hover:bg-gray-50">
                   <td class="px-3 py-2">{{ r.label }}</td>
                   <td class="px-3 py-2 text-right">{{ r.count }}</td>
                   <td class="px-3 py-2 text-right">{{ formatCurrency(r.bruto) }}</td>
