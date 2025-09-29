@@ -83,7 +83,7 @@
 
           <div class="mt-4 px-3 text-xs uppercase text-gray-500">Financeiro</div>
 
-          <RouterLink :to="{ name: '' }"
+          <RouterLink :to="{ name: 'financeiro.geral' }"
             class="mt-1 flex items-center gap-2 px-3 py-2 rounded-md border border-transparent" :class="linkClass('')">
 
             <DollarSign class="text-brand" />

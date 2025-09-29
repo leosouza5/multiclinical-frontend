@@ -21,10 +21,9 @@
 
         <div class="flex items-center justify-end gap-2 pt-2 border-t border-line">
           <RouterLink to="/procedures" class="px-3 py-2 rounded-lg border border-line hover:bg-gray-50">Cancelar</RouterLink>
-          <button type="submit" :disabled="saving"
-                  class="px-3 py-2 rounded-lg bg-brand text-white hover:bg-brand-600 disabled:opacity-60">
-            {{ saving ? "Salvando…" : (isEdit ? "Salvar alterações" : "Salvar Procedimento") }}
-          </button>
+          <AppButton :loading="saving">
+            {{ saving ? "Salvando…" : (isEdit ? "Salvar alterações" : "Salvar Procedimento")   }}
+          </AppButton>
         </div>
       </form>
     </div>

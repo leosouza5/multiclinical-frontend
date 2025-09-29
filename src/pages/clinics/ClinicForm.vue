@@ -26,11 +26,8 @@
             <!-- Nome -->
             <div class="md:col-span-2">
               <label class="block text-md mb-1">Nome</label>
-              <input
-                v-model.trim="form.nome"
-                required
-                minlength="3"
-                placeholder="Digite o nome da clínica"
+              <input v-model.trim="form.nome" required minlength="3" placeholder="Digite o nome da clínica"
+                maxlength="80"
                 class="w-full border border-line rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-brand/30" />
               <p v-if="errors.nome" class="text-xs text-red-600 mt-1">{{ errors.nome }}</p>
             </div>
@@ -38,10 +35,7 @@
             <!-- Taxa de Repasse (%) -->
             <div>
               <label class="block text-md mb-1">Taxa de Repasse (%)</label>
-              <input
-                v-model.number="form.taxa_repasse"
-                type="number"
-                step="0.01" min="0" max="100"
+              <input v-model.number="form.taxa_repasse" type="number" step="0.01" min="0" max="100"
                 placeholder="Ex.: 15.5"
                 class="w-full border border-line rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-brand/30" />
               <p v-if="errors.taxa_repasse" class="text-xs text-red-600 mt-1">{{ errors.taxa_repasse }}</p>
@@ -50,13 +44,8 @@
             <!-- Telefone -->
             <div>
               <label class="block text-md mb-1">Telefone</label>
-              <input
-                :value="form.telefone"
-                @input="onPhoneInput"
-                @keydown="onlyDigitsKeydown"
-                inputmode="tel"
-                placeholder="(00) 00000-0000"
-                maxlength="16"
+              <input :value="form.telefone" @input="onPhoneInput" @keydown="onlyDigitsKeydown" inputmode="tel"
+                placeholder="(00) 00000-0000" maxlength="15"
                 class="w-full border border-line rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-brand/30" />
               <p v-if="errors.telefone" class="text-xs text-red-600 mt-1">{{ errors.telefone }}</p>
             </div>
@@ -64,10 +53,7 @@
             <!-- Responsável -->
             <div>
               <label class="block text-md mb-1">Nome do Responsável</label>
-              <input
-                v-model.trim="form.responsavel_nome"
-                required
-                minlength="3"
+              <input v-model.trim="form.responsavel_nome" required minlength="3" maxlength="80"
                 placeholder="Digite o nome"
                 class="w-full border border-line rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-brand/30" />
               <p v-if="errors.responsavel_nome" class="text-xs text-red-600 mt-1">{{ errors.responsavel_nome }}</p>
@@ -75,11 +61,8 @@
 
             <div>
               <label class="block text-md mb-1">Email do Responsável</label>
-              <input
-                v-model.trim="form.responsavel_email"
-                type="email"
-                inputmode="email"
-                placeholder="email@exemplo.com"
+              <input v-model.trim="form.responsavel_email" type="email" inputmode="email"
+                placeholder="email@exemplo.com" maxlength="50"
                 class="w-full border border-line rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-brand/30" />
               <p v-if="errors.responsavel_email" class="text-xs text-red-600 mt-1">{{ errors.responsavel_email }}</p>
             </div>
@@ -96,11 +79,10 @@
         <!-- Ações -->
         <div class="flex items-center justify-end gap-3 pt-2 border-t border-line">
           <button type="button" @click="goBack"
-                  class="px-3 py-2 rounded-lg border border-line hover:bg-gray-50">Cancelar</button>
-          <button type="submit" :disabled="loading"
-                  class="px-3 py-2 rounded-lg bg-brand text-white hover:bg-brand-600 disabled:opacity-50">
-            {{ isEdit ? (loading ? "Salvando..." : "Salvar alterações") : (loading ? "Cadastrando..." : "Cadastrar") }}
-          </button>
+            class="px-3 py-2 rounded-lg border border-line hover:bg-gray-50">Cancelar</button>
+          <AppButton :loading="loading">
+            {{ isEdit ? (loading ? "Salvando..." : "Salvar alterações") : (loading ? "Cadastrando..." : "Cadastrar")  }}
+          </AppButton>
         </div>
       </form>
     </div>
@@ -112,6 +94,8 @@ import { reactive, ref, computed, onMounted } from "vue";
 import { useRouter, useRoute } from "vue-router";
 import { useNotify } from "../../stores/notify";
 import { useClinicsStore } from "../../stores/clinics";
+import AppButton from "../../components/AppButton.vue";
+
 
 const router = useRouter();
 const route = useRoute();
@@ -134,8 +118,8 @@ const form = reactive({
   ativo: true,
 });
 
-function onlyDigitsKeydown(e){
-  const allowed = ["Backspace","Delete","Tab","ArrowLeft","ArrowRight","Home","End"];
+function onlyDigitsKeydown(e) {
+  const allowed = ["Backspace", "Delete", "Tab", "ArrowLeft", "ArrowRight", "Home", "End"];
   if (allowed.includes(e.key)) return;
   if (!/^\d$/.test(e.key)) e.preventDefault();
 }
@@ -153,32 +137,32 @@ function maskPhone(value = "") {
 }
 function onPhoneInput(e) { form.telefone = maskPhone(e.target.value); }
 
-function goBack(){ router.push("/clinics"); }
+function goBack() { router.push("/clinics"); }
 
-function validate(){
+function validate() {
   Object.keys(errors).forEach(k => delete errors[k]);
 
-  if(!form.nome?.trim() || form.nome.trim().length < 3)
+  if (!form.nome?.trim() || form.nome.trim().length < 3)
     errors.nome = "Informe o nome da clínica (mín. 3 caracteres).";
 
   const taxa = Number(form.taxa_repasse);
-  if(Number.isNaN(taxa)) errors.taxa_repasse = "Informe a taxa de repasse (número).";
+  if (Number.isNaN(taxa)) errors.taxa_repasse = "Informe a taxa de repasse (número).";
   else if (taxa < 0 || taxa > 100) errors.taxa_repasse = "A taxa deve estar entre 0 e 100%.";
 
   const telDigits = form.telefone.replace(/\D/g, "");
   if (telDigits.length < 10) errors.telefone = "Informe um telefone válido.";
 
-  if(!form.responsavel_nome?.trim() || form.responsavel_nome.trim().length < 3)
+  if (!form.responsavel_nome?.trim() || form.responsavel_nome.trim().length < 3)
     errors.responsavel_nome = "Informe o nome do responsável (mín. 3 caracteres).";
 
   const email = form.responsavel_email?.trim();
   const emailOk = !!email && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
-  if(!emailOk) errors.responsavel_email = "Informe um e-mail válido.";
+  if (!emailOk) errors.responsavel_email = "Informe um e-mail válido.";
 
   return Object.keys(errors).length === 0;
 }
 
-function payload(){
+function payload() {
   return {
     nome_clinica: form.nome,
     taxa_repasse_clinica: Number(form.taxa_repasse),
@@ -188,10 +172,10 @@ function payload(){
   };
 }
 
-async function loadIfEdit(){
-  if(!isEdit.value) return;
+async function loadIfEdit() {
+  if (!isEdit.value) return;
   loading.value = true;
-  try{
+  try {
     const data = await clinics.fetchOne(id);
     form.nome = data?.nome_clinica ?? data?.nome ?? "";
     form.taxa_repasse = data?.taxa_repasse_clinica ?? data?.taxa_repasse ?? "";
@@ -200,27 +184,27 @@ async function loadIfEdit(){
     form.responsavel_email = data?.email_clinica ?? data?.responsavel_email ?? "";
     form.endereco = data?.endereco ?? "";
     form.ativo = data?.ativo ?? true;
-  } finally{
+  } finally {
     loading.value = false;
   }
 }
 
-async function onSubmit(){
-  if(!validate()) return;
+async function onSubmit() {
+  if (!validate()) return;
   loading.value = true;
-  try{
-    if(isEdit.value){
+  try {
+    if (isEdit.value) {
       await clinics.update(id, payload()); // PUT /clinicas/:id
       notify.success({ title: "Clínica atualizada" });
-    }else{
+    } else {
       await clinics.create(payload());     // POST /clinicas
       notify.success({ title: "Clínica criada" });
     }
     await clinics.loadAll?.();
     router.push("/clinics");
-  }catch{
+  } catch {
     /* erros globais via interceptor */
-  }finally{
+  } finally {
     loading.value = false;
   }
 }

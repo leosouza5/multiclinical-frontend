@@ -26,36 +26,8 @@
         <span class="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500"><Search /></span>
       </div>
 
-      <!-- Status: segmented control (igual Tipos de Atendimento) -->
-      <!-- <div class="flex items-center gap-2">
-        <span class="text-sm text-gray-500 mr-1">Status:</span>
-        <div class="inline-flex rounded-lg border border-line p-0.5 bg-gray-50">
-          <button
-            class="px-3 py-1.5 rounded-md text-sm transition"
-            :class="status === '' ? 'bg-white shadow border border-line' : 'text-gray-600 hover:bg-white'"
-            @click="setStatus('')"
-          >
-            Todos
-          </button>
-          <button
-            class="px-3 py-1.5 rounded-md text-sm transition"
-            :class="status === 'ATIVO' ? 'bg-white shadow border border-line' : 'text-gray-600 hover:bg-white'"
-            @click="setStatus('ATIVO')"
-          >
-            Ativos
-          </button>
-          <button
-            class="px-3 py-1.5 rounded-md text-sm transition"
-            :class="status === 'INATIVO' ? 'bg-white shadow border border-line' : 'text-gray-600 hover:bg-white'"
-            @click="setStatus('INATIVO')"
-          >
-            Inativos
-          </button>
-        </div>
-      </div> -->
     </div>
 
-    <!-- Tabela -->
     <div class="bg-white rounded-md shadow-[var(--shadow-card)] border border-line overflow-hidden">
       <div class="flex-1 overflow-x-auto overflow-y-auto min-h-[500px]">
         <table class="w-full text-sm">

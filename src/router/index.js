@@ -4,7 +4,7 @@ import { authGuard } from "./guards";
 const Login = () => import("../pages/auth/Login.vue");
 const Forgot = () => import("../pages/auth/Forgot.vue");
 const AppLayout = () => import("../layouts/AppLayout.vue");
-const Dashboard = () => import("../pages/Dashboard.vue");
+const Dashboard = () => import("../pages/dashboard/Dashboard.vue");
 const UsersList = () => import("../pages/users/UsersList.vue");
 const UserNew = () => import("../pages/users/UserForm.vue");
 const ResetPassword = () => import("../pages/auth/ResetPassword.vue");
@@ -12,6 +12,7 @@ const ClinicsList = () => import("../pages/clinics/ClinicsList.vue");
 const ClinicForm = () => import("../pages/clinics/ClinicForm.vue");
 const ProceduresList = () => import('../pages/procedures/ProceduresList.vue');
 const ProcedureForm = () => import('../pages/procedures/ProcedureForm.vue');
+const VisaoGeralFinanceiro = () => import("../pages/financeiro/VisaoGeralFinanceiro.vue");
 
 
 
@@ -48,6 +49,7 @@ const router = createRouter({
         { path: "/pacientes", name: "pacientes", component: () => import("@/pages/pacientes/PacientesList.vue") },
         { path: "/pacientes/new", name: "pacientes.new", component: () => import("@/pages/pacientes/PacientesNew.vue") },
         { path: "/pacientes/:id/edit", name: "pacientes-edit", component: () => import("@/pages/pacientes/PacientesNew.vue") },
+        { path: "/financeiro/geral", name: "financeiro.geral", component: VisaoGeralFinanceiro },
 
       ],
     },
