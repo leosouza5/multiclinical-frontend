@@ -1,13 +1,20 @@
 <template>
-  <div class="bg-white border border-gray-200 rounded-xl shadow-sm">
+ 
+  <div  class="bg-white border border-gray-200 rounded-xl shadow-sm">
     <div class="px-6 pt-5 pb-0">
       <h3 class="flex items-center gap-2 text-gray-900 font-semibold">
         <component :is="icon" class="h-5 w-5 text-[#800000]" />
         {{ title }}
       </h3>
     </div>
-
-    <div class="p-6 space-y-4">
+     <EmptyState
+        v-if="!data || !data.length"
+        :icon="icon"
+        title="Sem dados para exibir"
+        description="Tente ajustar o período ou verifique se há lançamentos no sistema."
+    
+      />
+    <div v-else class="p-6 space-y-4">
       <div
         v-for="(item, index) in data"
         :key="item.nome"
@@ -36,6 +43,7 @@
 </template>
 
 <script setup>
+import EmptyState from '@/components/dashboard/EmptyState.vue'
 /**
  * Props:
  * - title: string
