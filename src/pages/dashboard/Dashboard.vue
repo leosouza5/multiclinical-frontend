@@ -55,7 +55,6 @@ const thirtyDaysAgo = new Date()
 thirtyDaysAgo.setDate(today.getDate() - 30)
 
 function toISOLocal(d) {
-  // garante que '2025-09-01' não retroceda por timezone
   const off = d.getTimezoneOffset()
   const local = new Date(d.getTime() - off * 60000)
   return local.toISOString()

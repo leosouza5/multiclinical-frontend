@@ -12,7 +12,9 @@
             <div class="flex-1 relative">
                 <input v-model="q" placeholder="Buscar usuários..."
                     class="w-full border border-line rounded-lg px-4 py-2 pl-10" />
-                <span class="absolute left-3 top-1/2 -translate-y-1/2"><Search /></span>
+                <span class="absolute left-3 top-1/2 -translate-y-1/2">
+                    <Search />
+                </span>
             </div>
         </div>
 
@@ -75,10 +77,10 @@
                                                 </button>
                                                 </MenuItem>
                                                 <MenuItem v-slot="{ active }">
-                                                <button @click="askDelete(u)"
-                                                    class="w-full text-left px-3 py-2 text-sm rounded-md text-red-700"
-                                                    :class="active ? 'bg-gray-50' : ''">
-                                                    Excluir
+                                                <button @click="askToggle(u)"
+                                                    class="w-full text-left px-3 py-2 text-sm rounded-md"
+                                                    :class="[active ? 'bg-gray-50' : '', isActive(u) ? 'text-red-700' : 'text-green-700']">
+                                                    {{ actionLabel(u) }}
                                                 </button>
                                                 </MenuItem>
                                             </div>
@@ -103,10 +105,10 @@
     </div>
 
     <!-- Modal de confirmação -->
-    <AppModal :open="confirmOpen" title="Excluir usuário"
-        :description="`Tem certeza que deseja excluir ${confirmName}? Essa ação não poderá ser desfeita.`"
-        cancelText="Cancelar" confirmText="Excluir" :confirmLoading="confirmLoading" @close="confirmOpen = false"
-        @confirm="confirmDelete" />
+    <AppModal :open="confirmOpen" :title="`${confirmDesiredActive ? 'Ativar' : 'Inativar'} usuário`"
+        :description="`Tem certeza que deseja ${confirmDesiredActive ? 'ativar' : 'inativar'} ${confirmName}?`"
+        cancelText="Cancelar" :confirmText="confirmDesiredActive ? 'Ativar' : 'Inativar'"
+        :confirmLoading="confirmLoading" @close="confirmOpen = false" @confirm="confirmToggle" />
 </template>
 
 <script setup>
@@ -131,16 +133,21 @@ const confirmName = ref("");
 
 function getId(u) { return u.id ?? u.id_usuario ?? null; }
 function getName(u) { return u.name ?? u.nome_usuario ?? ""; }
+const confirmDesiredActive = ref(null);
 
+function isActive(u) { return (u?.ativo ?? u?.active ?? false) === true; }
+function statusLabel(u) { return isActive(u) ? 'Ativo' : 'Inativo'; }
+function actionLabel(u) { return isActive(u) ? 'Inativar' : 'Ativar'; }
 function toggleMenu(u) {
     const id = getId(u);
     openId.value = openId.value === id ? null : id;
 }
 
-function askDelete(u) {
+function askToggle(u) {
     openId.value = null;
     confirmId.value = getId(u);
     confirmName.value = getName(u);
+    confirmDesiredActive.value = !isActive(u);
     confirmOpen.value = true;
 }
 
@@ -149,13 +156,33 @@ async function confirmDelete() {
     confirmLoading.value = true;
     try {
         await usersStore.remove(confirmId.value);
-        notify.success({ title: "Usuário removido" });
+        notify.success({ title: "Usuário Inativado" });
         confirmOpen.value = false;
     } catch {/* erro já no interceptor */ }
     finally {
         confirmLoading.value = false;
     }
 }
+
+async function confirmToggle() {
+  if (!confirmId.value || confirmDesiredActive.value === null) return;
+  confirmLoading.value = true;
+  try {
+    await usersStore.updateStatus(confirmId.value, { ativo: confirmDesiredActive.value });
+
+    notify.success({
+      title: confirmDesiredActive.value ? "Usuário Ativado" : "Usuário Inativado"
+    });
+    confirmOpen.value = false;
+
+    await usersStore.loadAll();
+  } catch (e) {
+    console.log(e);
+    
+  } finally {
+    confirmLoading.value = false;
+  }
+ }
 
 function onDocClick(e) {
     if (!(e.target.closest && e.target.closest("[role='menu']")) &&

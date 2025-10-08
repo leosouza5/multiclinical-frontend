@@ -16,18 +16,15 @@
         :aria-controls="listId"
         :role="'combobox'"
       />
-      <!-- chevron dentro da área clicável -->
       <span class="absolute right-2 text-gray-500 pointer-events-none">▾</span>
     </div>
 
-    <!-- Dropdown -->
     <div
       v-if="open"
       class="absolute z-50 mt-1 w-full rounded-lg border border-line bg-white shadow-[var(--shadow-card)] max-h-64 overflow-auto"
       :id="listId"
       role="listbox"
     >
-      <!-- Caixa de busca dedicada (opcional; mantém mesma consulta do input principal) -->
       <div class="p-2 border-b border-line hidden">
         <input
           v-model="query"
@@ -91,9 +88,7 @@ const displayLabel = computed(() => {
 
 function openDropdown() {
   open.value = true;
-  // primeira abertura: dispara busca inicial
   if (!props.items?.length) triggerSearch("");
-  // posiciona highlight no item selecionado
   const idx = props.items.findIndex(i => getVal(i) === props.modelValue);
   activeIndex.value = idx >= 0 ? idx : -1;
 }
@@ -106,7 +101,6 @@ function onType(val){
   triggerSearch(val);
 }
 
-// depois de displayLabel:
 const shownItems = computed(() => {
   const q = (query.value || "").trim().toLowerCase();
   if (!q) return props.items;
@@ -150,25 +144,20 @@ function triggerSearch(q){
     loading.value = true;
     Promise.resolve(emit("search", q)).finally(() => {
       loading.value = false;
-      // reset highlight
       const idx = props.items.findIndex(i => getVal(i) === props.modelValue);
       activeIndex.value = idx >= 0 ? idx : (props.items.length ? 0 : -1);
     });
   }, 200);
 }
 
-// --- click outside (diretiva local) ---
 function handleOutside(evt){
   if (!open.value) return;
-  const root = evt?.currentTarget; // não usamos aqui (diretiva fornece el), mas mantemos assinatura
-  // Fecha se clicar fora do wrapper (feito pela diretiva)
+  const root = evt?.currentTarget; 
   closeDropdown();
 }
 onMounted(() => {
-  // nada extra
 });
 
-// diretiva local de click-outside
 const vClickOutside = {
   mounted(el, binding) {
     el.__clickOutside__ = (e) => {
@@ -185,13 +174,10 @@ const vClickOutside = {
     delete el.__clickOutside__;
   }
 };
-// registra localmente
-// eslint-disable-next-line vue/no-setup-props-destructure
 defineExpose({});
 </script>
 
 <script>
-// registra a diretiva no escopo do componente
 export default {
   directives: { clickOutside: {
     mounted(el, binding) {

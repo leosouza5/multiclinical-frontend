@@ -32,10 +32,7 @@
             <p class="text-sm text-gray-500">Filtro: {{ dateRange.from }} a {{ dateRange.to }} · Registros: {{
               rows.length }}</p>
           </div>
-          <div class="flex items-center gap-2">
-            <button class="px-3 py-2 rounded-lg border border-gray-200 hover:bg-gray-50" @click="exportCSV">Exportar
-              CSV</button>
-          </div>
+          
         </div>
         <div class="overflow-x-auto">
           <table class="min-w-full text-sm">

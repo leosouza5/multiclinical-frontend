@@ -38,7 +38,7 @@
 
             <!-- Nome -->
             <div class="md:col-span-2">
-              <label class="block text-md mb-1">Nome</label>
+              <label class="block text-md mb-1">Nome para login</label>
               <input v-model.trim="form.name" placeholder="Digite o nome completo"
                 class="w-full border border-line rounded-lg px-3 py-2" />
               <p v-if="errors.name" class="text-xs text-red-600 mt-1">{{ errors.name }}</p>
@@ -72,38 +72,7 @@
           </div>
         </fieldset>
 
-        <!-- Permissões
-        <fieldset>
-          <legend class="text-md font-medium text-gray-700">Permissões</legend>
-          <div class="grid gap-x-10 gap-y-2 md:grid-cols-3 mt-2 text-md">
-            <label class="flex items-center gap-2">
-              <input type="checkbox" value="pacientes" v-model="form.perms" class="size-4"> Pacientes
-            </label>
-            <label class="flex items-center gap-2">
-              <input type="checkbox" value="atendimentos" v-model="form.perms" class="size-4"> Atendimentos
-            </label>
-            <label class="flex items-center gap-2">
-              <input type="checkbox" value="clinicas" v-model="form.perms" class="size-4"> Clínicas
-            </label>
-
-            <label class="flex items-center gap-2">
-              <input type="checkbox" value="profissionais" v-model="form.perms" class="size-4"> Profissionais
-            </label>
-            <label class="flex items-center gap-2">
-              <input type="checkbox" value="procedimentos" v-model="form.perms" class="size-4"> Procedimentos
-            </label>
-            <label class="flex items-center gap-2">
-              <input type="checkbox" value="convenios" v-model="form.perms" class="size-4"> Convênios
-            </label>
-
-            <label class="flex items-center gap-2">
-              <input type="checkbox" value="financeiro" v-model="form.perms" class="size-4"> Financeiro
-            </label>
-            <label class="flex items-center gap-2">
-              <input type="checkbox" value="admin" v-model="form.perms" class="size-4"> Administração
-            </label>
-          </div>
-        </fieldset> -->
+       
 
         <!-- Ações -->
         <div class="flex items-center justify-between mt-2">
@@ -143,7 +112,7 @@ const form = reactive({
   password: "",
   passwordConfirm: "",
   active: true,
-  // perms: [],
+ 
 });
 
 function goBack(){ router.push("/users"); }
@@ -170,7 +139,7 @@ function payload() {
     nome_usuario: form.username,
     email: form.email,
     ativo: form.active,
-    // perms: Array.isArray(form.perms) ? form.perms : [],
+ 
   };
   if (!isEdit.value) base.senha = form.password;
   else if (form.password) base.senha = form.password;
@@ -187,7 +156,6 @@ onMounted(async () => {
     form.username = user.nome_usuario;
     form.email = user.email;
     form.active = user.ativo;
-    // form.perms = user.permissoes ?? [];
   }
 });
 
@@ -210,7 +178,7 @@ async function onSubmit() {
       await usersStore.loadAll?.();
     }
     router.push("/users");
-  } catch {/* erro no interceptor */}
+  } catch {}
   finally { loading.value = false; }
 }
 </script>

@@ -77,9 +77,29 @@ export const useUsersStore = defineStore("users", {
       }
     },
 
+    async updateStatus(id, { ativo }) {
+      this.loading = true; this.error = null;
+      console.log("TO AQQQ");
+      
+      try {
+        const updated = await updateUser(id, { ativo });
+
+      
+        return updated;
+      } catch (e) {
+        this.error = e?.response?.data?.message || e.message || "Erro ao alterar status do usuário";
+        throw e;
+      } finally {
+        this.loading = false;
+      }
+    },
+
+
     async remove(id) {
       this.loading = true; this.error = null;
       try {
+        console.log("TO AQ");
+        
         await deleteUser(id);
         this.items = this.items.filter(u => String(u.id) !== String(id));
       } catch (e) {
