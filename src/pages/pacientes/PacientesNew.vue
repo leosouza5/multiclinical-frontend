@@ -246,8 +246,8 @@ onMounted(async () => {
             cpf: data.cpf ? maskCPF(data.cpf) : "",
             data_nascimento: isoToBr(data.data_nascimento ?? data.nascimento ?? null),
             telefone: data.telefone ? maskPhone(data.telefone) : "",
-            responsavel_nome: data.responsavel_nome ?? "",
-            responsavel_telefone: data.responsavel_telefone ? maskPhone(data.responsavel_telefone) : "",
+            responsavel_nome: data.responsavel?.nome_responsavel ?? "",
+            responsavel_telefone: data.responsavel?.telefone ? maskPhone(data.responsavel.telefone) : "",
         };
     } catch (e) {
         notify.error({ title: "Erro", message: e?.message || "Falha ao carregar paciente" });
@@ -269,7 +269,7 @@ async function salvar() {
 
             // responsável (apenas dois campos)
             responsavel_nome: form.value.responsavel_nome?.trim() || null,
-            responsavel_telefone: onlyDigits(form.value.responsavel_telefone) || null,
+            responsavel_telefone: form.value.responsavel_telefone?.trim() || null,
         });
 
         if (isEdit.value) {

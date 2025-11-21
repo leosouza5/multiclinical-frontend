@@ -24,3 +24,8 @@ export async function deletePaciente(id) {
   const { data } = await http.delete(`/clientes/${id}`);
   return data;
 }
+
+export async function inativarPaciente(id) {
+  const { data } = await http.patch(`/clientes/${id}/inativar`);
+  return data;
+}

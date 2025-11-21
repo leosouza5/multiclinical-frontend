@@ -97,7 +97,7 @@
   import { Search } from "lucide-vue-next";
   import AppModal from "@/components/AppModal.vue";
   import { useNotify } from "@/stores/notify";
-  import { listPacientes, deletePaciente } from "@/services/pacientes.js";
+  import { listPacientes, inativarPaciente } from "@/services/pacientes.js";
   
   const router = useRouter();
   const notify = useNotify();
@@ -169,8 +169,8 @@
   async function confirmDelete(){
     confirmLoading.value = true;
     try{
-      await deletePaciente(confirmId.value);
-      notify.success({ title: "Paciente excluído" });
+      await inativarPaciente(confirmId.value);
+      notify.success({ title: "Paciente Excluido" });
       await reload();
     }catch(e){
       notify.error({ title: "Erro ao excluir", message: e?.response?.data?.message || e.message });
@@ -182,4 +182,3 @@
   
   onMounted(reload);
   </script>
-  
