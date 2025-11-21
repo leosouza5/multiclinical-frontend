@@ -43,10 +43,10 @@
                     </div>
                 </div>
 
-                <label class="mt-4 flex items-center gap-2 text-md text-gray-600">
+                <!-- <label class="mt-4 flex items-center gap-2 text-md text-gray-600">
                     <input type="checkbox" class="size-4 text-brand focus:ring-brand" v-model="remember" />
                     Lembrar de mim
-                </label>
+                </label> -->
 
                 <p v-if="error" class="text-md text-red-600 mt-3">{{ error }}</p>
 

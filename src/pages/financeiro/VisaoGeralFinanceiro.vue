@@ -1,7 +1,6 @@
 <template>
   <div class="min-h-screen bg-white">
-    <!-- Header (padrão do dashboard) -->
-    <div class="border-b border-gray-200 border-gray-200 bg-white">
+    <div class="border-b  border-gray-200 bg-white">
       <div class="flex h-16 items-center px-6">
         <div class="ml-auto flex items-center gap-4">
           <DateRangePicker :dateRange="dateRange" @update:dateRange="val => Object.assign(dateRange, val)" />
@@ -15,7 +14,6 @@
     </div>
 
     <div class="p-6 space-y-6">
-      <!-- Métricas Principais (MetricCard padrão) -->
       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
         <MetricCard title="Atendimentos" :value="totalAtendimentos.toLocaleString('pt-BR')" :icon="Users" />
         <MetricCard title="Bruto" :value="formatCurrency(totalBruto)" :icon="Receipt" />
