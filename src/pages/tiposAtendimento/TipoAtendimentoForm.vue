@@ -17,6 +17,7 @@
             <label class="text-md text-gray-700">Nome</label>
             <input v-model.trim="form.nome" placeholder="Digite o nome do tipo de atendimento"
                    class="w-full border border-line rounded-lg px-4 py-2" />
+            <p v-if="errors.nome" class="text-sm text-red-500">{{ errors.nome }}</p>
           </fieldset>
   
           <div class="flex items-center justify-end gap-2 pt-2 border-t border-line">
@@ -43,10 +44,18 @@ import { useNotify } from "../../stores/notify";
   
   const notify = useNotify()
   const form = reactive({ id: null, nome: "" });
+  const errors = reactive({});
   const isEdit = computed(() => Boolean(route.params.id));
   const saving = computed(() => store.loading);
   
   function goBack() { router.push("/tipos-atendimento"); }
+  
+  function validate() {
+    Object.keys(errors).forEach(k => delete errors[k]);
+    if (!form.nome?.trim() || form.nome.trim().length < 3)
+      errors.nome = "Informe o nome do tipo de atendimento (mín. 3 caracteres).";
+    return Object.keys(errors).length === 0;
+  }
   
   onMounted(async () => {
     if (isEdit.value) {
@@ -57,11 +66,10 @@ import { useNotify } from "../../stores/notify";
   });
   
   async function onSubmit() {
-    if (!form.nome.trim()) { alert("Informe o nome"); return; }
+    if (!validate()) return;
     if (isEdit.value) { await store.update(form.id, { nome_tipo_atendimento: form.nome }); }
     else { await store.create({ nome_tipo_atendimento: form.nome }); }
     notify.success({ title: "Tipo de Atendimento criado" });
     router.push("/tipos-atendimento");
   }
   </script>
-  

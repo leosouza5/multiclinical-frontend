@@ -18,6 +18,7 @@
           <label class="text-md text-gray-700">Nome</label>
           <input v-model.trim="form.nome" placeholder="Digite o nome do convênio"
             class="w-full border border-line rounded-lg px-4 py-2" />
+          <p v-if="errors.nome" class="text-xs text-red-600 mt-1">{{ errors.nome }}</p>
         </fieldset>
 
         <!-- Coparticipação + Telefone -->
@@ -26,12 +27,13 @@
             <label class="text-md text-gray-700">Valor de Coparticipação (%)</label>
             <input v-model.number="form.coparticipacao" type="number" step="0.01" min="0" placeholder="0.00"
               class="w-full border border-line rounded-lg px-4 py-2" />
+            <p v-if="errors.coparticipacao" class="text-xs text-red-600 mt-1">{{ errors.coparticipacao }}</p>
           </div>
           <div>
             <label class="text-md text-gray-700">Telefone</label>
             <input v-model="form.telefone" v-phone placeholder="(00) 00000-0000"
               class="w-full border border-line rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-brand/30" />
-            <!-- <p v-if="errors.telefone" class="text-xs text-red-600 mt-1">{{ errors.telefone }}</p> -->
+            <p v-if="errors.telefone" class="text-xs text-red-600 mt-1">{{ errors.telefone }}</p>
           </div>
         </div>
 
@@ -41,11 +43,13 @@
             <label class="text-md text-gray-700">Contato</label>
             <input v-model.trim="form.contato" placeholder="Nome do contato"
               class="w-full border border-line rounded-lg px-4 py-2" />
+            <p v-if="errors.contato" class="text-xs text-red-600 mt-1">{{ errors.contato }}</p>
           </div>
           <div>
             <label class="text-md text-gray-700">Email do Contato</label>
             <input v-model.trim="form.email" type="email" placeholder="email@exemplo.com"
               class="w-full border border-line rounded-lg px-4 py-2" />
+            <p v-if="errors.email" class="text-xs text-red-600 mt-1">{{ errors.email }}</p>
           </div>
         </div>
 
@@ -82,6 +86,8 @@ const form = reactive({
   email: "",
 });
 
+const errors = reactive({});
+
 const isEdit = computed(() => Boolean(route.params.id));
 const saving = computed(() => store.loading);
 
@@ -99,8 +105,24 @@ onMounted(async () => {
   }
 });
 
+function validate() {
+  Object.keys(errors).forEach(k => delete errors[k]);
+  if (!form.nome?.trim() || form.nome.trim().length < 3)
+    errors.nome = "Informe o nome do convênio (mín. 3 caracteres).";
+  if (form.coparticipacao === "" || isNaN(Number(form.coparticipacao)))
+    errors.coparticipacao = "Informe o valor de coparticipação.";
+  if (!form.telefone?.trim() || form.telefone.replace(/\D/g, "").length < 10)
+    errors.telefone = "Informe um telefone válido.";
+  if (!form.contato?.trim() || form.contato.trim().length < 3)
+    errors.contato = "Informe o nome do contato (mín. 3 caracteres).";
+  const email = form.email?.trim();
+  const emailOk = !!email && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+  if (!emailOk) errors.email = "Informe um e-mail válido.";
+  return Object.keys(errors).length === 0;
+}
+
 async function onSubmit() {
-  if (!form.nome.trim()) { alert("Informe o nome do convênio"); return; }
+  if (!validate()) return;
   const payload = {
     nome_convenio: form.nome,
     valor_coparticipacao: form.coparticipacao,

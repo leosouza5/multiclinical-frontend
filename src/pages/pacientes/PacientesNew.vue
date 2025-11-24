@@ -214,16 +214,16 @@ async function focusFirstError() {
 function validar() {
     erros.value = {};
     if (!form.value.nome?.trim()) erros.value.nome = "Informe o nome";
-
-    if (form.value.cpf && !cpfValido(form.value.cpf)) erros.value.cpf = "CPF inválido";
-    if (form.value.data_nascimento && !brToIso(form.value.data_nascimento))
-        erros.value.data_nascimento = "Data inválida";
-    if (form.value.telefone && onlyDigits(form.value.telefone).length < 10)
-        erros.value.telefone = "Telefone inválido";
-
+    if (!form.value.cpf?.trim()) erros.value.cpf = "Informe o CPF";
+    else if (!cpfValido(form.value.cpf)) erros.value.cpf = "CPF inválido";
+    if (!form.value.data_nascimento?.trim()) erros.value.data_nascimento = "Informe a data de nascimento";
+    else if (!brToIso(form.value.data_nascimento)) erros.value.data_nascimento = "Data inválida";
+    if (!form.value.telefone?.trim()) erros.value.telefone = "Informe o telefone";
+    else if (onlyDigits(form.value.telefone).length < 10) erros.value.telefone = "Telefone inválido";
+    if (form.value.responsavel_nome && form.value.responsavel_nome.trim().length < 3)
+        erros.value.responsavel_nome = "Nome do responsável muito curto";
     if (form.value.responsavel_telefone && onlyDigits(form.value.responsavel_telefone).length < 10)
-        erros.value.responsavel_telefone = "Telefone inválido";
-
+        erros.value.responsavel_telefone = "Telefone do responsável inválido";
     const ok = Object.keys(erros.value).length === 0;
     if (!ok) {
         notify.warning({ title: "Atenção", message: "Corrija os campos destacados." });

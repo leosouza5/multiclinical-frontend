@@ -17,6 +17,7 @@
           <label class="text-md text-gray-700">Nome</label>
           <input v-model.trim="form.nome" placeholder="Digite o nome do procedimento"
                  class="w-full border border-line rounded-lg px-4 py-2" />
+          <p v-if="errors.nome" class="text-sm text-red-500">{{ errors.nome }}</p>
         </fieldset>
 
         <div class="flex items-center justify-end gap-2 pt-2 border-t border-line">
@@ -40,10 +41,18 @@ const router = useRouter();
 const store = useProceduresStore();
 
 const form = reactive({ id: null, nome: "" });
+const errors = reactive({});
 const isEdit = computed(() => Boolean(route.params.id));
 const saving = computed(() => store.loading);
 
 function goBack() { router.push("/procedures"); }
+
+function validate() {
+  Object.keys(errors).forEach(k => delete errors[k]);
+  if (!form.nome?.trim() || form.nome.trim().length < 3)
+    errors.nome = "Informe o nome do procedimento (mín. 3 caracteres).";
+  return Object.keys(errors).length === 0;
+}
 
 onMounted(async () => {
   if (isEdit.value) {
@@ -54,7 +63,7 @@ onMounted(async () => {
 });
 
 async function onSubmit() {
-  if (!form.nome.trim()) { alert("Informe o nome do procedimento"); return; }
+  if (!validate()) return;
   if (isEdit.value) { await store.update(form.id, { nome_procedimento: form.nome }); }
   else { await store.create({ nome_procedimento: form.nome }); }
   router.push("/procedures");
